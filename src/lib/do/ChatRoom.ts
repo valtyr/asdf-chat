@@ -1,6 +1,8 @@
 import { handleErrors } from './helpers';
 import { nanoid } from 'nanoid';
 
+const MAX_TYPING_DURATION = 5000;
+
 interface Session {
   id: string;
   socket: WebSocket;
@@ -13,6 +15,11 @@ class ChatRoom {
   env: Env;
   sessions: Session[];
   lastTimestamp = 0;
+
+  typingState: {
+    id: string;
+    lastTypingEvent: number;
+  }[] = [];
 
   constructor(state: DurableObjectState, env: Env) {
     this.state = state;
@@ -45,6 +52,8 @@ class ChatRoom {
       socket: webSocket,
     };
 
+    let typingTimeoutHandle: number | null = null;
+
     this.sessions.push(session);
 
     webSocket.addEventListener('message', async (msg) => {
@@ -70,6 +79,31 @@ class ChatRoom {
             });
             break;
           }
+          case 'startTyping': {
+            this.startTyping(session);
+
+            if (typingTimeoutHandle) {
+              clearTimeout(typingTimeoutHandle);
+              typingTimeoutHandle = null;
+            }
+
+            typingTimeoutHandle = setTimeout(
+              () => this.stopTyping(session),
+              MAX_TYPING_DURATION,
+            );
+
+            break;
+          }
+          case 'stopTyping': {
+            this.stopTyping(session);
+
+            if (typingTimeoutHandle) {
+              clearTimeout(typingTimeoutHandle);
+              typingTimeoutHandle = null;
+            }
+
+            break;
+          }
         }
       } catch (err) {
         // Report any exceptions directly back to the client. As with our handleErrors() this
@@ -88,6 +122,34 @@ class ChatRoom {
     };
     webSocket.addEventListener('close', closeOrErrorHandler);
     webSocket.addEventListener('error', closeOrErrorHandler);
+  }
+
+  startTyping(session: Session): void {
+    const now = Date.now();
+    const idx = this.typingState.findIndex((item) => item.id === session.id);
+    if (idx === -1) {
+      this.typingState.push({ id: session.id, lastTypingEvent: now });
+    } else {
+      this.typingState[idx].lastTypingEvent = now;
+    }
+
+    this.afterTypingEvent();
+  }
+
+  stopTyping(session: Session): void {
+    const idx = this.typingState.findIndex((item) => item.id === session.id);
+    if (idx !== -1) {
+      this.typingState.splice(idx, 1);
+    }
+    this.afterTypingEvent();
+  }
+
+  afterTypingEvent(): void {
+    const now = Date.now();
+    this.typingState = this.typingState.filter(
+      (item) => now - item.lastTypingEvent < MAX_TYPING_DURATION,
+    );
+    this.broadcast({ type: 'typingState', typingState: this.typingState });
   }
 
   broadcast(message: string | Record<string, unknown>): void {
