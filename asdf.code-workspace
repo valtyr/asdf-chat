@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "name": "✨ root",
+      "path": "."
+    },
+    {
+      "name": "🚀 @asdf-chat/web",
+      "path": "packages/web"
+    },
+    {
+      "name": "📦 @asdf-chat/worker",
+      "path": "packages/worker"
+    }
+  ]
+}
