@@ -5,7 +5,7 @@ import Input from "../components/Input";
 
 const Home: NextPage = () => {
   return (
-    <div className="">
+    <div>
       <Input />
       <Button buttonStyle="accent">Start experience</Button>
     </div>
