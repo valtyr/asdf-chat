@@ -1,7 +1,7 @@
 import { handleErrors } from './helpers';
 import { nanoid } from 'nanoid';
 
-const MAX_TYPING_DURATION = 5000;
+const MAX_TYPING_DURATION = 2000;
 
 interface Session {
   id: string;
@@ -19,6 +19,7 @@ class ChatRoom {
   typingState: {
     id: string;
     lastTypingEvent: number;
+    username: string;
   }[] = [];
 
   constructor(state: DurableObjectState, env: Env) {
@@ -128,7 +129,11 @@ class ChatRoom {
     const now = Date.now();
     const idx = this.typingState.findIndex((item) => item.id === session.id);
     if (idx === -1) {
-      this.typingState.push({ id: session.id, lastTypingEvent: now });
+      this.typingState.push({
+        id: session.id,
+        lastTypingEvent: now,
+        username: session.username || '',
+      });
     } else {
       this.typingState[idx].lastTypingEvent = now;
     }

@@ -33,3 +33,8 @@ declare global {
     blockConcurrencyWhile(callback: () => void | Promise<void>): Promise<void>;
   }
 }
+
+declare module '*.html' {
+  const content: string;
+  export default content;
+}

@@ -1,9 +1,11 @@
-name = "multiplayer"
+name = "asdf-chat"
 type = "javascript"
-zone_id = ""
-account_id = ""
-route = ""
-workers_dev = true
+zone_id = "1cdd649f553403940cc21aff32aea316"
+account_id = "342285476fa519e04a9db74787b46103"
+route = "asdf.chat"
+workers_dev = false
+
+
 
 [build]
 command = "yarn run build"

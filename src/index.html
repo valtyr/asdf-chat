@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat</title>
+
+    <meta charset="utf-8" />
+
+    <style>
+      .connected {
+        color: springgreen;
+      }
+      .disconnected {
+        color: orangered;
+      }
+
+      #chatbox {
+        border: 2px solid gainsboro;
+        border-radius: 8px;
+        appearance: none;
+        font-size: 14px;
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="live-indicator">•</div>
+    <input id="chatbox" placeholder="Send a message" />
+    <pre id="typing-indicator"></pre>
+    <div id="messages"></div>
+
+    <script>
+      const roomUrl = (room) =>
+        `${location.protocol === 'http:' ? 'ws' : 'wss'}://${
+          location.host
+        }/room/${room}/websocket`;
+
+      const liveIndicator = document.querySelector('#live-indicator');
+      const messages = document.querySelector('#messages');
+      const chatbox = document.querySelector('#chatbox');
+      const typingIndicator = document.querySelector('#typing-indicator');
+
+      const socket = new WebSocket(roomUrl('test'));
+
+      const appendMessage = (data) => {
+        const messageElement = document.createElement('div');
+        messageElement.innerText = `${data.username} (${new Date(
+          data.timestamp,
+        ).toLocaleTimeString()}): ${data.message}`;
+        messages.appendChild(messageElement);
+      };
+
+      socket.addEventListener('open', () => {
+        const username = window.location.search
+          ? window.location.search.substring(1)
+          : 'valtyr';
+
+        socket.send(
+          JSON.stringify({
+            type: 'setup',
+            username: username,
+          }),
+        );
+
+        liveIndicator.classList.remove('disconnected');
+        liveIndicator.classList.add('connected');
+      });
+
+      socket.addEventListener('close', () => {
+        liveIndicator.classList.remove('connected');
+        liveIndicator.classList.add('disconnected');
+      });
+
+      const sendMessage = (message) => {
+        socket.send(
+          JSON.stringify({
+            type: 'message',
+            message,
+          }),
+        );
+      };
+
+      const typingEvent = (message) => {
+        socket.send(
+          JSON.stringify({
+            type: 'startTyping',
+          }),
+        );
+      };
+
+      const onTypingState = (data) => {
+        if (data.typingState.length === 0) {
+          typingIndicator.innerHTML = '';
+          return;
+        }
+
+        typingIndicator.innerHTML = `${data.typingState
+          .map((s) => s.username)
+          .join(', ')} typing...`;
+      };
+
+      let lastTypingEvent = 0;
+      chatbox.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && e.target.value) {
+          sendMessage(e.target.value);
+          e.target.value = '';
+          return;
+        }
+
+        const now = Date.now();
+        if (now - lastTypingEvent > 5000) {
+          typingEvent();
+          lastTypingEvent = now;
+        }
+      });
+
+      socket.addEventListener('message', (e) => {
+        const data = JSON.parse(e.data);
+
+        switch (data.type) {
+          case 'message': {
+            return appendMessage(data);
+          }
+          case 'typingState': {
+            return onTypingState(data);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -4,7 +4,7 @@
   "description": "Cloudflare worker TypeScript template",
   "main": "dist/index.mjs",
   "scripts": {
-    "build": "esbuild src/index.ts --format=esm --bundle --define:GIT_HASH=\\\"$(git rev-parse HEAD)\\\" --sourcemap --outfile=dist/index.mjs",
+    "build": "esbuild src/index.ts --format=esm --bundle --define:GIT_HASH=\\\"$(git rev-parse HEAD)\\\" --loader:.html=text --sourcemap --outfile=dist/index.mjs",
     "dev": "miniflare --watch --debug",
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",

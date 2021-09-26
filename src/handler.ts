@@ -1,4 +1,5 @@
 import Router from './lib/router';
+import indexPage from './index.html';
 
 const router = Router();
 
@@ -24,7 +25,16 @@ router.get('/room/:name/websocket', async (request, env) => {
   newUrl.pathname = '/websocket';
   return roomObject.fetch(newUrl.toString(), request);
 });
-router.get('/test', () => new Response('hello'));
+
+router.get('/', () => {
+  return new Response(indexPage, {
+    headers: {
+      'Content-Type': 'text/html',
+      'Content-Encoding': 'utf-8',
+    },
+  });
+});
+
 router.get('*', () => new Response('Not found', { status: 404 }));
 
 export async function handleRequest(
