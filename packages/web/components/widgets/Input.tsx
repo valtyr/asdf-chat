@@ -1,5 +1,5 @@
 import React from "react";
-import classNames from "../lib/classNames";
+import classNames from "../../lib/classNames";
 import FocusRing from "./FocusRing";
 
 const Input: React.FC<

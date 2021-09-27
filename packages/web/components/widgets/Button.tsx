@@ -2,11 +2,11 @@ import React, { useRef } from "react";
 import { useButton } from "@react-aria/button";
 import { AriaButtonProps } from "@react-types/button";
 
-import assertUnreachable from "../lib/assertUnreachable";
-import classNames from "../lib/classNames";
+import assertUnreachable from "../../lib/assertUnreachable";
+import classNames from "../../lib/classNames";
 import FocusRing from "./FocusRing";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import useCombinedRefs from "../lib/useCombinedRefs";
+import useCombinedRefs from "../../lib/useCombinedRefs";
 
 export type ButtonStyle =
   | "primary"

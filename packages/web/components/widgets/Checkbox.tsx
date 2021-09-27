@@ -1,7 +1,7 @@
 import * as RadixCheckbox from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
 import React from "react";
-import classNames from "../lib/classNames";
+import classNames from "../../lib/classNames";
 import FocusRing from "./FocusRing";
 
 const Checkbox: React.FC<{
