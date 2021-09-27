@@ -1,14 +1,16 @@
 import React from "react";
+import { AppProps } from "next/app";
+
 import "tailwindcss/tailwind.css";
 
 import { IdProvider } from "@radix-ui/react-id";
 
-function MyApp({ Component, pageProps }) {
+const App = ({ Component, pageProps }: AppProps) => {
   return (
     <IdProvider>
       <Component {...pageProps} />
     </IdProvider>
   );
-}
+};
 
-export default MyApp;
+export default App;
