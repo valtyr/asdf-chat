@@ -1,6 +1,8 @@
 import Router from './lib/router';
 import indexPage from './index.html';
 
+import { uuid } from '@cfworker/uuid';
+
 const router = Router();
 
 router.get('/room/:name/websocket', async (request, env) => {
@@ -30,6 +32,39 @@ router.get('/', () => {
   return new Response(indexPage, {
     headers: {
       'Content-Type': 'text/html',
+      'Content-Encoding': 'utf-8',
+    },
+  });
+});
+
+router.get('/test', async () => {
+  const enc = new TextEncoder();
+
+  const keyUUID = uuid();
+  const secretUUID = uuid();
+
+  const keyDigest = await crypto.subtle.digest('SHA-256', enc.encode(keyUUID));
+  const secretDigest = await crypto.subtle.digest(
+    'SHA-256',
+    enc.encode(secretUUID),
+  );
+
+  const key = btoa(
+    new Uint8Array(keyDigest).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      '',
+    ),
+  );
+  const secret = btoa(
+    new Uint8Array(secretDigest).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      '',
+    ),
+  );
+
+  return new Response(JSON.stringify({ key, secret }), {
+    headers: {
+      'Content-Type': 'application/json',
       'Content-Encoding': 'utf-8',
     },
   });

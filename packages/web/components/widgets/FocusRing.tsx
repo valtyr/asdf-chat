@@ -4,7 +4,8 @@ import React from "react";
 const FocusRing: React.FC<{ children: React.ReactElement }> = ({
   children,
 }) => (
-  <AriaFR within focusRingClass="ring-2 ring-blue-400 ring-offset-1">
+  // <AriaFR within focusRingClass="ring-2 ring-blue-400 ring-offset-1">
+  <AriaFR within focusRingClass="ring-2 ring-blue-400">
     {children}
   </AriaFR>
 );

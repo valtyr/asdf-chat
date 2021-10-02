@@ -35,6 +35,8 @@
     "typescript": "^4.3.2"
   },
   "dependencies": {
+    "@asdf-chat/types": "^0.0.0",
+    "@cfworker/uuid": "^1.9.1",
     "esbuild": "^0.12.28",
     "itty-router": "^2.4.2",
     "miniflare": "^1.4.1",

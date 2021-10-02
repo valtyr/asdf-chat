@@ -11,6 +11,10 @@
     {
       "name": "📦 @asdf-chat/worker",
       "path": "packages/worker"
+    },
+    {
+      "name": "🍌 @asdf-chat/types",
+      "path": "packages/types"
     }
   ]
 }

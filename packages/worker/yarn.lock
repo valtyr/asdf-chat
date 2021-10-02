@@ -309,6 +309,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@cfworker/uuid@^1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@cfworker/uuid/-/uuid-1.9.1.tgz#a52a17246e57398cb6aed6aba1c0849000774022"
+  integrity sha512-ufORuZ6JSelrG7b7/cQ8JEm7MM+FWgPb5D9wvF6diA8+9WlK+K5SElF3eqRC7BiGrwQAZQ9feWMVLdOXv1d6fg==
+
 "@cloudflare/workers-types@^2.2.2":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-2.2.2.tgz#1bced16bba801d7af987da835467545bb5cc7ac6"

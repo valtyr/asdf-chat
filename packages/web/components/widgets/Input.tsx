@@ -8,24 +8,22 @@ const Input: React.FC<
     HTMLInputElement
   >
 > = ({ defaultValue, ...props }) => (
-  <div>
-    <FocusRing>
-      <div
-        className={classNames(
-          `outline-none rounded-lg box-border font-normal
+  <FocusRing>
+    <div
+      className={classNames(
+        `outline-none rounded-lg box-border font-normal
           border border-gray-200 focus:py-[7px] focus:px-[9px]
           focus:border-2
           shadow-sm flex items-center`,
-          props.className
-        )}
-      >
-        <input
-          {...props}
-          className="py-[8px] px-[10px] outline-none rounded-lg w-full"
-        />
-      </div>
-    </FocusRing>
-  </div>
+        props.className
+      )}
+    >
+      <input
+        {...props}
+        className="py-[8px] px-[10px] outline-none rounded-lg w-full"
+      />
+    </div>
+  </FocusRing>
 );
 
 export default Input;

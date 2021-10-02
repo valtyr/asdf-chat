@@ -53,6 +53,7 @@ const Button = React.forwardRef<
   HTMLDivElement,
   AriaButtonProps<"div"> & {
     buttonStyle: ButtonStyle;
+    className?: string;
   }
 >(({ buttonStyle, ...props }, forwardedRef) => {
   let innerRef = useRef<HTMLDivElement>(null);
@@ -69,7 +70,8 @@ const Button = React.forwardRef<
           classNamesForButtonStyle(
             props.isDisabled ? "secondary" : buttonStyle
           ),
-          props.isDisabled && "opacity-60 cursor-not-allowed"
+          props.isDisabled && "opacity-60 cursor-not-allowed",
+          props.className
         )}
         ref={ref}
       >

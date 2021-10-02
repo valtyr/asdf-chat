@@ -6,16 +6,21 @@
     "start": "next start"
   },
   "dependencies": {
+    "@asdf-chat/types": "^0.0.0",
     "@radix-ui/react-checkbox": "^0.1.0",
     "@radix-ui/react-icons": "^1.0.3",
     "@radix-ui/react-id": "^0.1.0",
     "@react-aria/button": "^3.3.4",
     "@react-aria/focus": "^3.5.0",
     "framer-motion": "^4.1.17",
+    "immer": "^9.0.6",
     "jotai": "^1.3.6",
     "next": "11.1.2",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-use-websocket": "^2.8.0",
+    "react-virtuoso": "^2.2.1",
+    "zustand": "^3.5.10"
   },
   "devDependencies": {
     "@types/react": "^17.0.24",

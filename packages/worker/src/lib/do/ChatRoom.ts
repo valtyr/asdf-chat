@@ -1,5 +1,6 @@
 import { handleErrors } from './helpers';
 import { nanoid } from 'nanoid';
+import { ChatEvent } from '@asdf-chat/types/lib/chat';
 
 const MAX_TYPING_DURATION = 2000;
 
@@ -64,16 +65,17 @@ class ChatRoom {
           return;
         }
 
-        const data = JSON.parse(msg.data);
+        const data = JSON.parse(msg.data) as ChatEvent;
 
         switch (data.type) {
           case 'setup': {
             session.username = data.username;
             break;
           }
-          case 'message': {
+          case 'createMessage': {
+            if (!session.username) return;
             this.broadcast({
-              type: 'message',
+              type: 'newMessage',
               message: data.message,
               username: session.username,
               timestamp: new Date().toUTCString(),
@@ -157,7 +159,7 @@ class ChatRoom {
     this.broadcast({ type: 'typingState', typingState: this.typingState });
   }
 
-  broadcast(message: string | Record<string, unknown>): void {
+  broadcast(message: ChatEvent): void {
     // Apply JSON if we weren't given a string to start with.
     const serialized =
       typeof message === 'string' ? message : JSON.stringify(message);
