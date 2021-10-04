@@ -19,6 +19,7 @@ class Presence {
   env: Env;
   sessions: Session[];
   users: PresenceUser[];
+  rateLimiter: Partial<Record<string, number>> = {};
 
   constructor(state: DurableObjectState, env: Env) {
     this.state = state;
@@ -65,6 +66,19 @@ class Presence {
     this.sessions.push(session);
     this.users.push(user);
 
+    webSocket.send(
+      JSON.stringify({
+        type: 'id',
+        id: session.id,
+      } as ServerPresenceEvent),
+    );
+    webSocket.send(
+      JSON.stringify({
+        type: 'tick',
+        users: this.users,
+      } as ServerPresenceEvent),
+    );
+
     webSocket.addEventListener('message', async (msg) => {
       try {
         if (session.quit) {
@@ -82,6 +96,7 @@ class Presence {
               y: data.y,
             };
             this.tick(session.id);
+            break;
           }
         }
       } catch (err) {
@@ -102,17 +117,25 @@ class Presence {
     webSocket.addEventListener('error', closeOrErrorHandler);
   }
 
-  tick(skipId?: string): void {
-    const users = skipId
-      ? this.users.filter((u) => u.id !== skipId)
-      : this.users;
-    this.broadcast({
-      type: 'tick',
-      users,
-    });
+  limitRate(userId: string): boolean {
+    const now = Date.now();
+    const lastUpdateTime = this.rateLimiter[userId] || 0;
+    this.rateLimiter[userId] = now;
+    if (now - lastUpdateTime < 100) return true;
+    return false;
   }
 
-  broadcast(message: ServerPresenceEvent): void {
+  tick(skipId?: string): void {
+    this.broadcast(
+      {
+        type: 'tick',
+        users: this.users,
+      },
+      skipId,
+    );
+  }
+
+  broadcast(message: ServerPresenceEvent, skipId?: string): void {
     // Apply JSON if we weren't given a string to start with.
     const serialized =
       typeof message === 'string' ? message : JSON.stringify(message);
@@ -120,6 +143,8 @@ class Presence {
     // Iterate over all the sessions sending them messages.
     const quitters: Session[] = [];
     this.sessions = this.sessions.filter((session) => {
+      if (skipId && session.id === skipId) return true;
+
       try {
         session.socket.send(serialized);
         return true;

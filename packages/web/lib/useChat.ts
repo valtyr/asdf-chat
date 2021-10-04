@@ -73,7 +73,7 @@ export const useChat = (channelId: string, username: string) => {
   const setTypingState = useChatStore((s) => s.setTypingState);
   const channel = useChatStore((s) => s.channels[channelId] || null);
 
-  const { sendJsonMessage, readyState, s } = useWebSocket(
+  const { sendJsonMessage, readyState } = useWebSocket(
     `ws://localhost:8787/room/${encodeURIComponent(channelId)}/websocket`,
     {
       onOpen: () => {

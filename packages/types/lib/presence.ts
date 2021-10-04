@@ -15,10 +15,16 @@ export interface CursorEvent {
   y: number;
 }
 
+export type ClientPresenceEvent = CursorEvent;
+
+export interface IdEvent {
+  type: "id";
+  id: string;
+}
+
 export interface TickEvent {
   type: "tick";
   users: PresenceUser[];
 }
 
-export type ClientPresenceEvent = CursorEvent;
-export type ServerPresenceEvent = TickEvent;
+export type ServerPresenceEvent = TickEvent | IdEvent;

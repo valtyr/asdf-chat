@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <RequiresUsername>
       <main>
-        <Presence channelId="test" />
+        <Presence roomId="test" />
       </main>
     </RequiresUsername>
   );

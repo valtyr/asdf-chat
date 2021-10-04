@@ -4,6 +4,7 @@ declare global {
   interface Env {
     ENVIRONMENT?: string;
     rooms: DurableObjectNamespace;
+    presence: DurableObjectNamespace;
   }
 
   /**
