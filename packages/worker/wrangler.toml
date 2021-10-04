@@ -2,7 +2,7 @@ name = "asdf-chat"
 type = "javascript"
 zone_id = "1cdd649f553403940cc21aff32aea316"
 account_id = "342285476fa519e04a9db74787b46103"
-route = "asdf.chat"
+route = "asdf.chat/api*"
 workers_dev = false
 
 

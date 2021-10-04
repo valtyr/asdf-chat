@@ -1,9 +1,32 @@
 import Router from './lib/router';
-import indexPage from './index.html';
 
 import { uuid } from '@cfworker/uuid';
 
-const router = Router();
+const router = Router({ base: '/api' });
+
+router.get('/', async (r, env) => {
+  const cloudflareInfo = (r as Request).cf || { time: new Date() };
+
+  const document = `
+    <h3 style="font-family: monospace;">ASDF Chat API 🤪</h3>
+    <small style="font-family: monospace; margin-bottom: 20px; display: block;"><em>Revision:</em> <strong>${GIT_HASH}</strong></small>
+
+    <details>
+      <summary style="font-family: monospace; font-weight: 600; cursor: pointer;">
+        CF request info
+      </summary>
+      <pre style="font-size: 10px;">${JSON.stringify(
+        cloudflareInfo,
+        undefined,
+        2,
+      )}</pre>
+    </details>
+  `;
+
+  return new Response(document, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8' },
+  });
+});
 
 router.get('/room/:name/websocket', async (request, env) => {
   let id;
@@ -49,15 +72,6 @@ router.get('/presence/:name/websocket', async (request, env) => {
   const newUrl = new URL(request.url);
   newUrl.pathname = '/websocket';
   return roomObject.fetch(newUrl.toString(), request);
-});
-
-router.get('/', () => {
-  return new Response(indexPage, {
-    headers: {
-      'Content-Type': 'text/html',
-      'Content-Encoding': 'utf-8',
-    },
-  });
 });
 
 router.get('/test', async () => {

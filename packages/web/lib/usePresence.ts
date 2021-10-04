@@ -9,15 +9,21 @@ import {
 
 import useWebSocket from "react-use-websocket";
 import { useCallback, useState } from "react";
+import { wsUrl } from "./api";
+
+export const socketUrl = (room: string, username: string) =>
+  wsUrl(
+    `/api/presence/${encodeURIComponent(
+      room
+    )}/websocket?username=${encodeURIComponent(username)}`
+  );
 
 export const usePresence = (roomId: string, username: string) => {
   const [users, setUsers] = useState<PresenceUser[]>([]);
   const [id, setId] = useState<string | null>(null);
 
   const { sendJsonMessage, readyState } = useWebSocket(
-    `ws://localhost:8787/presence/${encodeURIComponent(
-      roomId
-    )}/websocket?username=${encodeURIComponent(username)}`,
+    socketUrl(roomId, username),
     {
       onMessage: (e) => {
         const data = JSON.parse(e.data) as ServerPresenceEvent;
